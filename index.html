@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UPS Shipping & Tracking</title>
+  <link rel="icon" type="image/png" href="https://res.cloudinary.com/drbiup2zg/image/upload/w_32,h_32/v1745030247/ups_yfdjww.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.5/babel.min.js"></script>
+  <style>
+    @media screen and (max-width: 600px) {
+      .h-flex {
+        display: none !important;
+      }
+    }
+    .ups-nav {
+      background-color: #F5F5F5;
+      padding: 10px 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .ups-nav a { margin-right: 15px; color: #000; text-decoration: none; }
+    .ups-nav a:hover { text-decoration: underline; }
+    .btn-ups { background-color: #FFC107; color: #000; border: none; }
+    .btn-ups:hover { background-color: #FFB300; }
+    .logo-img { height: 100px; }
+    .timeline { position: relative; padding-left: 30px; }
+    .timeline::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 2px; background: #28a745; }
+    .timeline-item { position: relative; margin-bottom: 20px; }
+    .timeline-item::before { content: ''; position: absolute; left: -30px; top: 5px; width: 15px; height: 15px; background: #28a745; border-radius: 50%; }
+    .timeline-item.delivered::before {
+      background: url('https://cdn-icons-png.flaticon.com/512/190/190411.png') no-repeat center;
+      background-size: 15px;
+    }
+    .proof-link { color: #007bff; cursor: pointer; text-decoration: underline; }
+    .proof-link:hover { color: #0056b3; }
+    .footer { background-color: #351C15; color: white; padding: 40px 0; }
+    .footer a { color: white; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .footer h5 { color: white; margin-bottom: 15px; }
+    .footer .social-icons a { margin-right: 10px; }
+    .footer .social-icons img { width: 24px; height: 24px; }
+    .footer-bottom { border-top: 1px solid #555; padding-top: 20px; margin-top: 20px; }
+    .footer-bottom a { margin-right: 15px; }
+    .ask-ups-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+    }
+    .ask-ups-btn:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const App = () => {
+      const [trackingNumber, setTrackingNumber] = useState('');
+      const [trackingResult, setTrackingResult] = useState(null);
+      const [showProof, setShowProof] = useState(false);
+
+      const proofImageURL = "https://res.cloudinary.com/drbiup2zg/image/upload/v1745089896/Screenshot_2025-04-19_at_20.09.35_qipafu.png";
+      const allowedProofLocation = "UPS Authorized Shipping Outlet, 800 E Wishkah St, Aberdeen, WA 98520, United States";
+
+      const mockData = {
+        UPS123456: {
+          status: 'Delivered',
+          history: [
+            { date: '07/06/2025 9:59 A.M.', location: '11319 Leannon Pike Hama Governorate Syrian', activity: 'Delivered', details: 'Proof of Delivery' },
+            { date: '05/07/2025 2:32 P.M.', location: allowedProofLocation, activity: 'Delivered', details: 'Proof of Delivery' },
+            { date: '09/07/2025 9:11 A.M.', location: '1494 WA-105, Grayland, WA 98547, USA', activity: 'Destination Scan', details: '' },
+          ]
+        }
+      };
+
+      const handleTrack = () => {
+        const result = mockData[trackingNumber];
+        setTrackingResult(result ? { found: true, ...result } : { found: false });
+        setShowProof(false); // reset proof view when new tracking is done
+      };
+
+      const handleShowProof = (location) => {
+        if (location === allowedProofLocation) {
+          setShowProof(!showProof);
+        } else {
+          alert("Proof of Delivery not available for this location.");
+        }
+      };
+
+      return (
+        <div>
+          <nav className="ups-nav">
+            <div className="container d-flex justify-content-between align-items-center">
+              <img src="https://res.cloudinary.com/drbiup2zg/image/upload/v1745030247/ups_yfdjww.png" alt="UPS Logo" className="logo-img"/>
+              <div className="h-flex">
+                <a href="#">Shipping</a>
+                <a href="#">Tracking</a>
+                <a href="#">Products & Services</a>
+                <a href="#">The UPS Store</a>
+              </div>
+              <button className="btn btn-ups">Log In</button>
+            </div>
+          </nav>
+
+          <div className="container mt-5">
+            <h3>Track Your Shipment</h3>
+            <textarea
+              className="form-control mb-3"
+              rows="2"
+              value={trackingNumber}
+              onChange={(e) => setTrackingNumber(e.target.value)}
+              placeholder="Enter tracking number"
+            ></textarea>
+            <button className="btn btn-ups" onClick={handleTrack}>Track</button>
+
+            {trackingResult && (
+              <div className="mt-4">
+                {trackingResult.found ? (
+                  <>
+                    <h5>Status: {trackingResult.status}</h5>
+                    <div className="timeline mt-3">
+                      {trackingResult.history.map((item, index) => (
+                        <div key={index} className={`timeline-item ${item.activity === 'Delivered' ? 'delivered' : ''}`}>
+                          <strong>{item.date}</strong> – {item.location} – {item.activity}
+                          {item.details && (
+                            <div className="proof-link" onClick={() => handleShowProof(item.location)}>
+                              {item.details}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {showProof && (
+                      <div className="mt-3">
+                        <img src={proofImageURL} alt="Proof of Delivery" width="300" />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="alert alert-warning mt-3">Tracking number not found.</div>
+                )}
+              </div>
+            )}
+          </div>
+
+          <footer className="footer mt-5">
+            <div className="container">
+              <div className="row">
+                <div className="col-md-4">
+                  <h5>Company Info</h5>
+                  <a href="#">About UPS</a><br/>
+                  <a href="#">Careers</a>
+                </div>
+                <div className="col-md-4">
+                  <h5>Customer Service</h5>
+                  <a href="#">Support Center</a><br/>
+                  <a href="#">Contact Us</a>
+                </div>
+                <div className="col-md-4">
+                  <h5>Follow Us</h5>
+                  <div className="social-icons">
+                    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"/></a>
+                    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"/></a>
+                    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"/></a>
+                  </div>
+                </div>
+              </div>
+              <div className="footer-bottom text-center mt-4">
+                <p>&copy; 2025 UPS Clone. All rights reserved.</p>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    };
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
