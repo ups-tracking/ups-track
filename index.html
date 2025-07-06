@@ -58,132 +58,152 @@
 </head>
 <body>
   <div id="root"></div>
-
-  <script type="text/babel">
-    const { useState } = React;
-
-    const App = () => {
-      const [trackingNumber, setTrackingNumber] = useState('');
-      const [trackingResult, setTrackingResult] = useState(null);
-      const [showProof, setShowProof] = useState(false);
-
-      const proofImageURL = "https://res.cloudinary.com/drbiup2zg/image/upload/v1745089896/Screenshot_2025-04-19_at_20.09.35_qipafu.png";
-      const allowedProofLocation = "UPS Authorized Shipping Outlet, 800 E Wishkah St, Aberdeen, WA 98520, United States";
-
-      const mockData = {
-        UPS123456: {
-          status: 'Delivered',
-          history: [
-            { date: '07/06/2025 9:59 A.M.', location: '11319 Leannon Pike Hama Governorate Syrian', activity: 'Delivered', details: 'Proof of Delivery' },
-            { date: '05/07/2025 2:32 P.M.', location: allowedProofLocation, activity: 'Delivered', details: 'Proof of Delivery' },
-            { date: '09/07/2025 9:11 A.M.', location: '1494 WA-105, Grayland, WA 98547, USA', activity: 'Destination Scan', details: '' },
-          ]
-        }
-      };
-
-      const handleTrack = () => {
-        const result = mockData[trackingNumber];
-        setTrackingResult(result ? { found: true, ...result } : { found: false });
-        setShowProof(false); // reset proof view when new tracking is done
-      };
-
-      const handleShowProof = (location) => {
-        if (location === allowedProofLocation) {
-          setShowProof(!showProof);
-        } else {
-          alert("Proof of Delivery not available for this location.");
-        }
-      };
-
-      return (
-        <div>
-          <nav className="ups-nav">
-            <div className="container d-flex justify-content-between align-items-center">
-              <img src="https://res.cloudinary.com/drbiup2zg/image/upload/v1745030247/ups_yfdjww.png" alt="UPS Logo" className="logo-img"/>
-              <div className="h-flex">
-                <a href="#">Shipping</a>
-                <a href="#">Tracking</a>
-                <a href="#">Products & Services</a>
-                <a href="#">The UPS Store</a>
-              </div>
-              <button className="btn btn-ups">Log In</button>
-            </div>
-          </nav>
-
-          <div className="container mt-5">
-            <h3>Track Your Shipment</h3>
-            <textarea
-              className="form-control mb-3"
-              rows="2"
-              value={trackingNumber}
-              onChange={(e) => setTrackingNumber(e.target.value)}
-              placeholder="Enter tracking number"
-            ></textarea>
-            <button className="btn btn-ups" onClick={handleTrack}>Track</button>
-
-            {trackingResult && (
-              <div className="mt-4">
-                {trackingResult.found ? (
-                  <>
-                    <h5>Status: {trackingResult.status}</h5>
-                    <div className="timeline mt-3">
-                      {trackingResult.history.map((item, index) => (
-                        <div key={index} className={`timeline-item ${item.activity === 'Delivered' ? 'delivered' : ''}`}>
-                          <strong>{item.date}</strong> – {item.location} – {item.activity}
-                          {item.details && (
-                            <div className="proof-link" onClick={() => handleShowProof(item.location)}>
-                              {item.details}
+<!-- (No changes in the <head> section) -->
+    <body>
+        <div id="root"></div>
+      
+        <script type="text/babel">
+          const { useState } = React;
+      
+          const App = () => {
+            const [trackingNumber, setTrackingNumber] = useState('');
+            const [trackingResult, setTrackingResult] = useState(null);
+            const [showProof, setShowProof] = useState(false);
+      
+            const proofImageURL = "https://res.cloudinary.com/drbiup2zg/image/upload/v1745089896/Screenshot_2025-04-19_at_20.09.35_qipafu.png";
+            const allowedProofLocation = "UPS Authorized Shipping Outlet, 800 E Wishkah St, Aberdeen, WA 98520, United States";
+      
+            const mockData = {
+              UPS789123: {
+                senderName: "Giovanni Moretti",
+                senderAddress: "Mail Boxes Etc. - Centro MBE 2511",
+                receiverName: "Edward Knutson",
+                receiverAddress: "1494 WA-105, Grayland, WA 98547, USA",
+                packageDetails: "Boxes",
+                image: "https://res.cloudinary.com/drbiup2zg/image/upload/v1745028956/Screenshot_2025-04-19_at_03.14.06_rpcpnp.png",
+                status: 'Delivered',
+                history: [
+                  { date: '07/06/2025 9:59 A.M.', location: '11319 Leannon Pike Hama Governorate Syrian', activity: 'Delivered', details: 'Proof of Delivery' },
+                  { date: '05/07/2025 2:32 P.M.', location: allowedProofLocation, activity: 'Delivered', details: 'Proof of Delivery' },
+                  { date: '09/07/2025 9:11 A.M.', location: '1494 WA-105, Grayland, WA 98547, USA', activity: 'Destination Scan', details: '' },
+                ]
+              }
+            };
+      
+            const handleTrack = () => {
+              const result = mockData[trackingNumber.trim()];
+              setTrackingResult(result ? { found: true, ...result } : { found: false });
+              setShowProof(false);
+            };
+      
+            const handleShowProof = (location) => {
+              if (location === allowedProofLocation) {
+                setShowProof(!showProof);
+              } else {
+                alert("Proof of Delivery not available for this location.");
+              }
+            };
+      
+            return (
+              <div>
+                <nav className="ups-nav">
+                  <div className="container d-flex justify-content-between align-items-center">
+                    <img src="https://res.cloudinary.com/drbiup2zg/image/upload/v1745030247/ups_yfdjww.png" alt="UPS Logo" className="logo-img" />
+                    <div className="h-flex">
+                      <a href="#">Shipping</a>
+                      <a href="#">Tracking</a>
+                      <a href="#">Products & Services</a>
+                      <a href="#">The UPS Store</a>
+                    </div>
+                    <button className="btn btn-ups">Log In</button>
+                  </div>
+                </nav>
+      
+                <div className="container mt-5">
+                  <h3>Track Your Shipment</h3>
+                  <textarea
+                    className="form-control mb-3"
+                    rows="2"
+                    value={trackingNumber}
+                    onChange={(e) => setTrackingNumber(e.target.value)}
+                    placeholder="Enter tracking number"
+                  ></textarea>
+                  <button className="btn btn-ups" onClick={handleTrack}>Track</button>
+      
+                  {trackingResult && (
+                    <div className="mt-4">
+                      {trackingResult.found ? (
+                        <>
+                          <h5>Status: {trackingResult.status}</h5>
+      
+                          {/* NEW: Sender & Receiver Info */}
+                          <div className="card p-3 my-3">
+                            <h6><strong>Sender:</strong> {trackingResult.senderName}</h6>
+                            <p>{trackingResult.senderAddress}</p>
+                            <h6><strong>Receiver:</strong> {trackingResult.receiverName}</h6>
+                            <p>{trackingResult.receiverAddress}</p>
+                            <p><strong>Package:</strong> {trackingResult.packageDetails}</p>
+                            <img src={trackingResult.image} alt="Package" width="300" className="img-fluid rounded mt-2" />
+                          </div>
+      
+                          <div className="timeline mt-3">
+                            {trackingResult.history.map((item, index) => (
+                              <div key={index} className={`timeline-item ${item.activity === 'Delivered' ? 'delivered' : ''}`}>
+                                <strong>{item.date}</strong> – {item.location} – {item.activity}
+                                {item.details && (
+                                  <div className="proof-link" onClick={() => handleShowProof(item.location)}>
+                                    {item.details}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+      
+                          {showProof && (
+                            <div className="mt-3">
+                              <img src={proofImageURL} alt="Proof of Delivery" width="300" />
                             </div>
                           )}
-                        </div>
-                      ))}
+                        </>
+                      ) : (
+                        <div className="alert alert-warning mt-3">Tracking number not found.</div>
+                      )}
                     </div>
-
-                    {showProof && (
-                      <div className="mt-3">
-                        <img src={proofImageURL} alt="Proof of Delivery" width="300" />
+                  )}
+                </div>
+      
+                <footer className="footer mt-5">
+                  <div className="container">
+                    <div className="row">
+                      <div className="col-md-4">
+                        <h5>Company Info</h5>
+                        <a href="#">About UPS</a><br />
+                        <a href="#">Careers</a>
                       </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="alert alert-warning mt-3">Tracking number not found.</div>
-                )}
-              </div>
-            )}
-          </div>
-
-          <footer className="footer mt-5">
-            <div className="container">
-              <div className="row">
-                <div className="col-md-4">
-                  <h5>Company Info</h5>
-                  <a href="#">About UPS</a><br/>
-                  <a href="#">Careers</a>
-                </div>
-                <div className="col-md-4">
-                  <h5>Customer Service</h5>
-                  <a href="#">Support Center</a><br/>
-                  <a href="#">Contact Us</a>
-                </div>
-                <div className="col-md-4">
-                  <h5>Follow Us</h5>
-                  <div className="social-icons">
-                    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"/></a>
-                    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter"/></a>
-                    <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"/></a>
+                      <div className="col-md-4">
+                        <h5>Customer Service</h5>
+                        <a href="#">Support Center</a><br />
+                        <a href="#">Contact Us</a>
+                      </div>
+                      <div className="col-md-4">
+                        <h5>Follow Us</h5>
+                        <div className="social-icons">
+                          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" /></a>
+                          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" /></a>
+                          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="footer-bottom text-center mt-4">
+                      <p>&copy; 2025 UPS Clone. All rights reserved.</p>
+                    </div>
                   </div>
-                </div>
+                </footer>
               </div>
-              <div className="footer-bottom text-center mt-4">
-                <p>&copy; 2025 UPS Clone. All rights reserved.</p>
-              </div>
-            </div>
-          </footer>
-        </div>
-      );
-    };
-
-    ReactDOM.render(<App />, document.getElementById('root'));
-  </script>
-</body>
-</html>
+            );
+          };
+      
+          ReactDOM.render(<App />, document.getElementById('root'));
+        </script>
+      </body>
+      
